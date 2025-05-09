@@ -1,0 +1,109 @@
+    @charset "UTF-8";
+
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #f4f6f8;
+      margin: 0;
+      padding: 20px;
+    }
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+    .logo-container {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    header img {
+      height: 60px;
+      max-width: 100%;
+    }
+    header h1 {
+      color: #333;
+      font-size: 1.8rem;
+      margin: 0;
+    }
+    .datetime {
+      font-size: 0.9rem;
+      color: #666;
+    }
+    form {
+      max-width: 700px;
+      margin: auto;
+      background: #fff;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    }
+    label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: 600;
+    }
+    input[type='text'],
+    input[type='number'] {
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      width: 100%;
+      margin-bottom: 15px;
+      font-size: 1rem;
+    }
+    .ferramenta {
+      background: #f9fafb;
+      border: 1px solid #e0e0e0;
+      border-radius: 10px;
+      padding: 15px;
+      margin-bottom: 15px;
+    }
+    .ferramenta label {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 1rem;
+    }
+    button {
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      padding: 14px 24px;
+      border-radius: 8px;
+      font-size: 1rem;
+      cursor: pointer;
+      width: 100%;
+      margin-bottom: 10px;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+    @media (max-width: 600px) {
+      form {
+        padding: 15px;
+      }
+      .ferramenta label {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 6px;
+      }
+      button {
+        font-size: 1rem;
+        padding: 12px;
+      }
+      header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+      }
+      .datetime {
+        align-self: flex-end;
+        text-align: right;
+        width: 100%;
+      }
+    }

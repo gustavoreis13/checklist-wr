@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Checklist de Ferramentas</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="shortcut icon" href="logo-wr fav.ico" type="image/x-icon">
+  <link rel="apple-touch-icon" href="logo-wr fav.ico">
+  <link rel="stylesheet" href="style.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+  <header>
+    <div class="logo-container">
+      <img src="logo-wr.jpg" alt="Logo WRTD">
+      <h1>Checklist de Ferramentas</h1>
+    </div>
+    <div class="datetime" id="datetime"></div>
+  </header>
+
+  <form id="checklist-form">
+    <label>Nome do Responsável:</label>
+    <input type="text" id="responsavel" required>
+    <div id="ferramentas-container"></div>
+    <button type="submit">Gerar PDF</button>
+    <button type="button" id="whatsapp-button">Compartilhar no WhatsApp</button>
+  </form>
+
+  <script>
+    const ferramentas = [
+    "Alicate de corte",
+    "Alicate universal",
+    "Alicate de pressão",
+    "Alicate pop (arrebitador)",
+    "Alicate de crimpagem",
+    "Alicate decapador",
+    "Push-down",
+    "Decapador de cabos",
+    "Chave grande de fenda",
+    "Chave media de fenda",
+    "Chave fina de fenda",
+    "Chave grande philips",
+    "Chave media philips",
+    "Chave fina philips",
+    "Chave fina blindada philips",
+    "Chave canhão 7mm",
+    "Chave canhão 10mm",
+    "Chave canhão 15mm",
+    "Jogo de chaves de boca (10mm a 19mm)",
+    "Jogo de chaves estriadas (10pçs)",
+    "Jogo de chaves allen (7pçs)",
+    "Jogo de catraca completo",
+    "Chave de boca regulável",
+    "Estilete",
+    "Trena 5mts",
+    "Jogo de serra copo p/ madeira",
+    "Serra copo p/ metal",
+    "Broca de vídea (parede) 6mm",
+    "Broca de vídea (parede) 10mm",
+    "Broca p/ metal 3mm",
+    "Broca p/ metal 4mm",
+    "Broca p/ metal 5mm",
+    "Broca p/ metal 8mm",
+    "Sonda passa fio 15mts",
+    "Ferro de solda",
+    "Testador de cabos de rede",
+    "Multímetro",
+    "Testador de bateria",
+    "Prog PPA",
+    "Voltímetro",
+    "Megan tester",
+    "Píncel grande",
+    "Píncel pequeno",
+    "Lanterna de cabeça",
+    "Capacete branco",
+    "Perneira de segurança",
+    "Aplicador de silicone",
+    "Bolsa telecom",
+    "Fita metrica 20mts",
+    "Lima",
+    "Cinto e talabarte",
+    "Marreta",
+
+    ];
+
+    const container = document.getElementById("ferramentas-container");
+
+    ferramentas.forEach((ferramenta, i) => {
+      const div = document.createElement("div");
+      div.className = "ferramenta";
+      div.innerHTML = `
+        <label>
+          <input type="checkbox" id="tem_${i}" onchange="toggleQuantidade(${i})">
+          ${ferramenta}
+        </label>
+        <label>Quantidade:</label>
+        <input type="number" id="qtd_${i}" value="0" disabled>
+      `;
+      container.appendChild(div);
+    });
+
+    function toggleQuantidade(i) {
+      const checkbox = document.getElementById(`tem_${i}`);
+      const quantidade = document.getElementById(`qtd_${i}`);
+      quantidade.disabled = !checkbox.checked;
+      if (!checkbox.checked) quantidade.value = 0;
+    }
+
+    function atualizarDataHora() {
+      const agora = new Date();
+      document.getElementById("datetime").innerText = agora.toLocaleString();
+    }
+    atualizarDataHora();
+
+    document.getElementById("checklist-form").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+
+  const nome = document.getElementById("responsavel").value;
+  const data = new Date().toLocaleString();
+
+  // Título
+  doc.setFontSize(16);
+  doc.text("Checklist de Ferramentas", 105, 20, { align: "center" });
+
+  // Responsável e Data
+  doc.setFontSize(12);
+  doc.text(`Responsável: ${nome}`, 20, 30);
+  doc.text(`Data: ${data}`, 20, 38);
+
+  // Cabeçalho da tabela
+  let y = 50;
+  doc.setFontSize(12);
+  doc.setFont("helvetica", "bold");
+  doc.text("Item", 20, y);
+  doc.text("Tem", 110, y);
+  doc.text("Quantidade", 150, y);
+  doc.setFont("helvetica", "normal");
+
+  // Dados da tabela
+  y += 10;
+  ferramentas.forEach((f, i) => {
+    const tem = document.getElementById(`tem_${i}`).checked ? "Sim" : "Não";
+    const qtd = document.getElementById(`qtd_${i}`).value;
+    doc.text(f, 20, y);
+    doc.text(tem, 110, y);
+    doc.text(qtd.toString(), 150, y);
+    y += 8;
+    if (y > 280) {  // nova página se ultrapassar altura
+      doc.addPage();
+      y = 20;
+    }
+  });
+
+  doc.save(`checklist_${nome.replace(/\s+/g, '_')}.pdf`);
+});
+
+
+    document.getElementById("whatsapp-button").addEventListener("click", () => {
+      const nome = document.getElementById("responsavel").value;
+      const data = new Date().toLocaleString();
+      const mensagem = `Checklist de ferramentas preenchido por ${nome} em ${data}. PDF gerado e salvo localmente.`;
+      const url = `https://wa.me/?text=${encodeURIComponent(mensagem)}`;
+      window.open(url, '_blank');
+    });
+  </script>
+</body>
+</html>
+
+
+
